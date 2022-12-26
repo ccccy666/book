@@ -6,8 +6,8 @@
 #include "error.h"
 
 
-#include <iostream>
-#include <string>
+//#include <iostream>
+//#include <string>
 #include <sstream>
 
 enum TokenType {
@@ -63,6 +63,14 @@ public:
     int getChar();
 
     void ungetChar(int ch);
+    bool startsWith(std::string str, std::string prefix) {
+        if (str.length() < prefix.length()) return false;
+        int nChars = prefix.length();
+        for (int i = 0; i < nChars; i++) {
+            if (str[i] != prefix[i]) return false;
+        }
+        return true;
+    }
 
     std::string getStringValue(std::string token) const;
 
@@ -484,6 +492,13 @@ std::string TokenScanner::scanString() {
 bool TokenScanner::isOperator(std::string op) {
     for (StringCell *cp = operators; cp != nullptr; cp = cp->link) {
         if (op == cp->str) return true;
+    }
+    return false;
+}
+
+bool TokenScanner::isOperatorPrefix(std::string op) {
+    for (StringCell *cp = operators; cp != nullptr; cp = cp->link) {
+        if (startsWith(cp->str, op)) return true;
     }
     return false;
 }
