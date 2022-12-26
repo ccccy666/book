@@ -1,12 +1,11 @@
 #ifndef CODE_BOOK_HPP
 #define CODE_BOOK_HPP
 #include <iostream>
-#include <fstream>
+//#include <fstream>
 #include"error.h"
-#include <cstring>
-//#include "token_scanner.h"
-//#include"diary.h"
-//#include"condition.h"
+//#include <cstring>
+#include<vector>
+
 using namespace std;
 struct ISBN {
     char isbn_[22];
@@ -50,7 +49,7 @@ struct Name {
 
     Name() {};
 
-    bool operator==(Name &other) {
+    bool operator==(const Name &other) const{
         return (!strcmp(name_, other.name_));
     }
 
@@ -76,7 +75,7 @@ struct Author {
 
     Author() {};
 
-    bool operator==(Author &other) {
+    bool operator==(Author &other) const{
         return (!strcmp(author_, other.author_));
     }
 
@@ -102,7 +101,7 @@ struct Keyword {
 
     Keyword() {};
 
-    bool operator==(Keyword &other) {
+    bool operator==(Keyword &other) const{
         return (!strcmp(keyword_, other.keyword_));
     }
 
@@ -124,7 +123,7 @@ public:
     Keyword keyword;
     int quantity = 0;
     double price = 0;
-    int total_cost = 0;
+    double total_cost = 0;
 
     bool operator<(const Book &other) const {
         return isbn < other.isbn;
@@ -469,25 +468,82 @@ public:
     }
 
     void show_name(const Name& name_){
-
+        Block new_;
+        bool get=0;
+        int i=0;
+        while(i!=-1){
+            getin(i,new_);
+            if (new_.size == 0) {
+                i = new_.next;
+                continue;
+            }
+            myread(i, new_);
+            for (int k = 0; k < new_.size; ++k) {
+                if(new_.ele[k].name==name_){
+                    get=1;
+                    cout<<new_.ele[k]<<'\n';
+                }
+            }
+            i=new_.next;
+        }
+        if(!get)cout<<'\n';
     };
     void show_author(Author& author_){
-
+        Block new_;
+        bool get=0;
+        int i=0;
+        while(i!=-1){
+            getin(i,new_);
+            if (new_.size == 0) {
+                i = new_.next;
+                continue;
+            }
+            myread(i, new_);
+            for (int k = 0; k < new_.size; ++k) {
+                if(new_.ele[k].author==author_){
+                    get=1;
+                    cout<<new_.ele[k]<<'\n';
+                }
+            }
+            i=new_.next;
+        }
+        if(!get)cout<<'\n';
     };
     void show_keyword(Keyword & keyword_){
-
+        Block new_;
+        bool get=0;
+        int i=0,j=0;
+        vector<string> words;
+        string word;
+        while(i!=-1){
+            getin(i,new_);
+            if (new_.size == 0) {
+                i = new_.next;
+                continue;
+            }
+            myread(i, new_);
+            for (int k = 0; k < new_.size; ++k) {
+                while(new_.ele[k].keyword.keyword_[j]!='\0'){
+                    if(new_.ele[k].keyword.keyword_[j]=='|'||new_.ele[k].keyword.keyword_[j+1]=='\0'){
+                        words.push_back(word);
+                        j++;
+                        continue;
+                    }
+                    word[j]+=new_.ele[k].keyword.keyword_[j];
+                    j++;
+                }
+                for(auto iter=words.begin();iter!=words.end();iter++){
+                    Keyword kk(*iter);
+                    if(keyword_==kk){
+                        get=1;
+                        cout<<new_.ele[k]<<'\n';
+                    }
+                }
+            }
+            i=new_.next;
+        }
+        if(!get)cout<<'\n';
     }
-//    void buy(TokenScanner &line, condition &status,
-//             diaryGroup &Group);
-//
-//    void modify(TokenScanner &line, condition &status,
-//                diaryGroup &Group);
-//
-//    void select(TokenScanner &line, condition &status,
-//                diaryGroup &Group);
-//
-//    void import(TokenScanner &line, condition &status,
-//                diaryGroup &Group);
 
 };
 #endif //CODE_BOOK_HPP
