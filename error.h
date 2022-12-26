@@ -1,7 +1,7 @@
 #ifndef CODE_ERROR_HPP
 #define CODE_ERROR_HPP
 
-#include <string>
+//#include <string>
 #include <exception>
 
 
