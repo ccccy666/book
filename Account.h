@@ -3,7 +3,7 @@
 #include <fstream>
 //#include "linklist_.h"
 #include<cstring>
-
+#include"error.h"
 using namespace std;
 struct userID {
     char userid[32];
@@ -150,6 +150,7 @@ public:
             }
             i = new_.next;
         }
+        error("Invalid");
     }
     void split(int coord, block &node) {
         total++;
@@ -249,7 +250,7 @@ public:
             }
             i = new_.next;
         }
-
+        error("Invalid");
     }
     void merge(int coord, block &node) {
         int nx1 = node.next;
