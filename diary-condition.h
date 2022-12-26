@@ -167,9 +167,7 @@ struct _block{
 };
 class condition{
 public:
-
     fstream inout;
-
     const string filename="condition";
     int total=-1;
     ISBN book_id;
@@ -216,18 +214,18 @@ public:
     }
     Account get(){
         _block mid;
-        Account now;
+        //Account now;
         if(total<0)error("Invalid");
         myread(total,mid);
-        now=mid.account;
-        return now;
+
+        return mid.account;
     }
     void login(Account an_Account){
         ++total;
-        ISBN isb;
+        //ISBN isb;
         _block blk;
         blk.account=an_Account;
-        blk.isbn=isb;
+        //.isbn=isb;
         mywrite(total,blk);
     };
 
@@ -235,6 +233,7 @@ public:
         --total;
     };
     _block getblock(){
+        if(total<0)error("Invalid");
         _block tmp;
         myread(total,tmp);
         return tmp;
