@@ -34,11 +34,9 @@ int main() {
                 string id, word,describe;
                 Account account_;
                 operat = scanner.nextToken();
-                for (int i = 0; i < operat.size(); i++) {
-                    id[i] = operat[i];
-                }
+                id=operat;
                 userID _id(id);
-                if (allaccount.exist(_id) == 0) {
+                if (!allaccount.exist(_id)) {
                     error("Invalid");
                 }
                 account_ = allaccount.find(id);
@@ -49,11 +47,10 @@ int main() {
                     now_user.login(account_);
                     continue;
                 }
-                scanner.nextToken();
+                //scanner.nextToken();
                 operat = scanner.nextToken();
-                for (int i = 0; i < operat.size(); i++) {
-                    id[i] = operat[i];
-                }
+                word=operat;
+                //cout<<operat<<"    "<<account_.password;
                 if (account_.password != word) {
                     error("Invalid");
                 }
@@ -67,8 +64,9 @@ int main() {
                 }
                 string describe;
                 int i=0;
-                while(now_user.get().ID.userid[i]!='\0'){
-                    describe[i]=now_user.get().ID.userid[i];
+                Account ac=now_user.get();
+                while(ac.ID.userid[i]!='\0'){
+                    describe[i]=ac.ID.userid[i];
                     i++;
                 }
                 describe+=" logout";
@@ -78,21 +76,16 @@ int main() {
             } else if (operat == "register") {
                 string id, pasword, nam;
                 operat = scanner.nextToken();
-                for (int i = 0; i < operat.size(); i++) {
-                    id[i] = operat[i];
-                }
+                id=operat;
+
                 userID _id(id);
                 if (allaccount.exist(_id)) {
                     error("Invalid");
                 }
                 operat = scanner.nextToken();
-                for (int i = 0; i < operat.size(); i++) {
-                    pasword[i] = operat[i];
-                }
+                pasword=operat;
                 operat = scanner.nextToken();
-                for (int i = 0; i < operat.size(); i++) {
-                    nam[i] = operat[i];
-                }
+                nam=operat;
                 string describe;
                 describe=id+" register";
                 log alog(describe);
@@ -102,15 +95,15 @@ int main() {
             } else if (operat == "passwd") {
                 //todo
                 string id, oldpass, newpass;
-                for (int i = 0; i < operat.size(); i++) {
-                    id[i] = operat[i];
-                }
+                id=operat;
                 userID _id(id);
-                if (allaccount.exist(_id) == 0 || now_user.total == -1)error("Invalid");
+                if (allaccount.exist(_id) == 0 ||now_user.total==-1)error("Invalid");
                 operat = scanner.nextToken();
-                Account tmp = now_user.get();
+                Account tmp ;
                 block blk;
                 if (!scanner.hasMoreTokens()) {
+                    //if(now_user.total==-1)error("Invalid");
+                    tmp = now_user.get();
                     if (tmp.privilege < 7)error("Invalid");
                     tmp = allaccount.find(_id);
                     int j=0;
@@ -137,14 +130,10 @@ int main() {
                     continue;
                 }
                 tmp = allaccount.find(_id);
-                for (int i = 0; i < operat.size(); i++) {
-                    oldpass[i] = operat[i];
-                }
+                oldpass=operat;
                 if (tmp.password != oldpass)error("Invalid");
                 operat = scanner.nextToken();
-                for (int i = 0; i < operat.size(); i++) {
-                    newpass[i] = operat[i];
-                }
+                newpass=operat;
                 blk = allaccount.getblock(_id);
                 for (int i = 0; i < blk.size; i++) {
                     if (tmp.ID == blk.ele[i].ID) {
@@ -166,26 +155,24 @@ int main() {
                     error("Invalid");
                 }
                 string id, pasword, nam;
-                int priv;
+                int priv=0;
                 operat = scanner.nextToken();
-                for (int i = 0; i < operat.size(); i++) {
-                    id[i] = operat[i];
-                }
+                id=operat;
                 userID _id(id);
                 if (allaccount.exist(_id)) {
                     error("Invalid");
                 }
                 operat = scanner.nextToken();
-                for (int i = 0; i < operat.size(); i++) {
-                    pasword[i] = operat[i];
-                }
+                pasword=operat;
                 operat = scanner.nextToken();
                 priv = operat[0] - '0';
-                if (priv >= tmp.privilege) error("Invalid");
+                cout<<priv<<' ';
+                //有错
+                // if(operat.size()>1||(priv!=1&&priv!=3&&priv!=7)||priv >= tmp.privilege)error("Invalid");
                 operat = scanner.nextToken();
-                for (int i = 0; i < operat.size(); i++) {
-                    nam[i] = operat[i];
-                }
+                cout<<operat<<' ';
+
+                nam=operat;
                 string the;
                 int j=0;
                 while(tmp.ID.userid[j]!='\0'){
@@ -205,9 +192,7 @@ int main() {
                 }
                 string id;
                 operat = scanner.nextToken();
-                for (int i = 0; i < operat.size(); i++) {
-                    id[i - 1] = operat[i];
-                }
+                id=operat;
                 userID _id(id);
                 if (allaccount.exist(_id) == 0 || tmp.ID == _id) {
                     error("Invalid");
@@ -282,9 +267,7 @@ int main() {
                 string is;
                 int qua = 0;
                 operat = scanner.nextToken();
-                for (int i = 0; i < operat.size(); i++) {
-                    is[i] = operat[i];
-                }
+                is=operat;
                 ISBN isb(is);
                 Block tmp = allbooks.getblock(isb);
                 operat = scanner.nextToken();
@@ -317,9 +300,7 @@ int main() {
                 if (present.privilege < 3)error("Invalid");
                 string is;
                 operat = scanner.nextToken();
-                for (int i = 0; i < operat.size(); i++) {
-                    is[i] = operat[i];
-                }
+                is=operat;
                 ISBN isb(is);
                 if (!allbooks.exist(isb)) {
                     Book book_;
