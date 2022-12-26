@@ -67,7 +67,7 @@ public:
     };
 };
 struct block {
-    int next = 0;
+    int next = -1;
     Account mini, maxi;
     int size = 0;
     Account ele[2001];
@@ -77,7 +77,7 @@ class All_Account {
 public:
 
     const int maxsize = 2000, minsize = 1000;
-    int total = -1;
+    int total = 0;
     fstream inout;
     const string filename="Account";
     //block tp;
@@ -93,6 +93,9 @@ public:
             //string s="root";
             Account ac("root","sjtu","",7);
             tmp.ele[0]=ac;
+            tmp.size=1;
+            tmp.mini=tmp.maxi=ac;
+            tmp.place=0;
             out.write(reinterpret_cast<char *>(&total), sizeof(total));
             out.write(reinterpret_cast<char *>(&tmp), sizeof(tmp));
             out.close();
@@ -132,26 +135,7 @@ public:
         inout.seekp(coord * sizeof(block) + sizeof(int));
         inout.write(reinterpret_cast<char *>(&node), sizeof(node));
     }
-    block getblock(const userID inde){
-        block new_;
-        int i = 0;
-        //bool fin = 0;
-        while (i != -1) {
-            getin(i, new_);
-            if (new_.size == 0) {
-                i = new_.next;
-                continue;
-            }
-            if ((new_.mini.ID <= inde) && (inde <= new_.maxi.ID)) {
-                myread(i, new_);
-                return new_;
-            } else if (inde < new_.mini.ID) {
-                break;
-            }
-            i = new_.next;
-        }
-        error("Invalid");
-    }
+
     void split(int coord, block &node) {
         total++;
         block new_;
@@ -218,7 +202,7 @@ public:
             }
             getin(new_.next, nx);
             if (ele >= new_.mini && ele < nx.mini) {
-                // 插入这里
+
                 insert_sort(i, ele);
                 return;
             }
@@ -226,6 +210,26 @@ public:
             new_ = nx;
         }
         insert_sort(i, ele);
+    }
+    block getblock(const userID inde){
+        block new_;
+        int i = 0;
+        //bool fin = 0;
+        while (i != -1) {
+            getin(i, new_);
+            if (new_.size == 0) {
+                i = new_.next;
+                continue;
+            }
+            if ((new_.mini.ID <= inde) && (inde <= new_.maxi.ID)) {
+                myread(i, new_);
+                return new_;
+            } else if (inde < new_.mini.ID) {
+                break;
+            }
+            i = new_.next;
+        }
+        error("Invalid");
     }
     Account find(const userID &inde) {
         block new_;
