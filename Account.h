@@ -9,6 +9,8 @@ struct userID {
     char userid[32];
     userID(){};
     userID(std::string &in){
+        if(in.size()>30)error("Invalid");
+
         for(int i=0;i<in.size();i++){
             userid[i]=in[i];
         }
