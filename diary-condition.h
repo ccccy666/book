@@ -62,9 +62,7 @@ public:
         inout.seekp(coord * sizeof(diary) + sizeof(int));
         inout.write(reinterpret_cast<char *>(&node), sizeof(node));
     }
-    void show_all(){
 
-    };
 
     void show(int count){
         diary mid;
@@ -81,7 +79,18 @@ public:
                 neg+=mid.sum;
             }
         }
-        cout<<"+ "<<pos<<" - "<<neg<<'\n';
+        string ss1= to_string(pos),s1= to_string(int(pos));
+        string ss2= to_string(neg),s2= to_string(int(neg));
+        cout<<"+ ";
+        for(int g=0;g<s1.size()+3;g++){
+            cout<<ss1[g];
+        }
+        cout<<" - ";
+        for(int g=0;g<s2.size()+3;g++){
+            cout<<ss2[g];
+        }
+        cout<<'\n';
+        //cout<<"+ "<<pos<<" - "<<neg<<'\n';
     }
 
     void add_log(diary new_){
@@ -232,6 +241,15 @@ public:
     void logout(){
         --total;
     };
+    bool exist(const userID id){
+        if(total<0)error("Invalid");
+        _block node;
+        for(int i=0;i<=total;i++){
+            myread(i,node);
+            if(node.account.ID==id)return true;
+        }
+        return false;
+    }
     _block getblock(){
         if(total<0)error("Invalid");
         _block tmp;
@@ -239,10 +257,18 @@ public:
         return tmp;
     };
     void select (ISBN book_){
-        _block mid;
+        _block mid,pro;
         myread(total,mid);
         mid.isbn=book_;
         mid.selected=1;
+//        for(int i=0;i<total;i++){
+//            myread(i,pro);
+//            if(pro.account.ID==mid.account.ID){
+//                pro.isbn=book_;
+//                pro.selected=1;
+//                mywrite(i,pro);
+//            }
+//        }
         mywrite(total,mid);
     };
 };
