@@ -4,7 +4,7 @@
 //#include"linklist_.h"
 //#include"condition.h"
 //#include"Account.h"
-#include"diary.h"
+#include"diary-condition.h"
 #include "token_scanner.h"
 //#include"condition.h"
 //#include<sstream>
