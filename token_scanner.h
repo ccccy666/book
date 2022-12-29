@@ -34,6 +34,7 @@ public:
         if(!flag){
             return " ";
         }
+        if(!hasMoreTokens())error("Invalid");
         int i=0;
 
         std::string ss;
