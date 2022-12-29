@@ -13,8 +13,9 @@ using namespace std;
 
 int main() {
     string line, operat;
+    Bookstore Allbooks_;
     all_Log detail;
-    All_Books allbooks;
+    //All_Books allbooks;
     All_Account allaccount;
     condition now_user;
     Token_scanner scanner;
@@ -50,14 +51,12 @@ int main() {
                     now_user.login(account_);
                     continue;
                 }
-                //scanner.nextToken();
                 operat = scanner.nextToken();
+                if(operat.size()>30)error("Invalid");
                 word = operat;
-                //cout<<operat<<"    "<<account_.password;
                 if (account_.password != word) {
                     error("Invalid");
                 }
-
                 describe = id + " su";
                 log alog(describe);
                 detail.add_logs(alog);
@@ -87,9 +86,11 @@ int main() {
                     error("Invalid");
                 }
                 operat = scanner.nextToken();
+                if(operat.size()>30)error("Invalid");
                 pasword = operat;
                 if(!scanner.hasMoreTokens())error("Invalid");
                 operat = scanner.nextToken();
+                if(operat.size()>30)error("Invalid");
                 nam = operat;
                 if(scanner.hasMoreTokens())error("Invalid");
                 string describe;
@@ -106,6 +107,7 @@ int main() {
                 userID _id(id);
                 if (allaccount.exist(_id) == 0 || now_user.total == -1)error("Invalid");
                 operat = scanner.nextToken();
+                if(operat.size()>30)error("Invalid");
                 Account tmp;
                 block blk;
                 if (!scanner.hasMoreTokens()) {
@@ -142,6 +144,7 @@ int main() {
                 oldpass = operat;
                 if (tmp.password != oldpass)error("Invalid");
                 operat = scanner.nextToken();
+                if(operat.size()>30)error("Invalid");
                 newpass = operat;
                 blk = allaccount.getblock(_id);
                 for (int i = 0; i < blk.size; i++) {
@@ -172,6 +175,7 @@ int main() {
                     error("Invalid");
                 }
                 operat = scanner.nextToken();
+                if(operat.size()>30)error("Invalid");
                 pasword = operat;
                 if(!scanner.hasMoreTokens())error("Invalid");
                 operat = scanner.nextToken();
@@ -181,6 +185,7 @@ int main() {
                 if(operat.size()>1||(priv!=1&&priv!=3&&priv!=7)||priv >= tmp.privilege)error("Invalid");
                 if(!scanner.hasMoreTokens())error("Invalid");
                 operat = scanner.nextToken();
+                if(operat.size()>30)error("Invalid");
                 //cout << operat << ' ';
                 nam = operat;
                 string the;
@@ -204,7 +209,7 @@ int main() {
                 operat = scanner.nextToken();
                 id = operat;
                 userID _id(id);
-                if (allaccount.exist(_id) == 0 || tmp.ID == _id) {
+                if (allaccount.exist(_id) == 0 || now_user.exist(_id)) {
                     error("Invalid");
                 }
                 string describe, the;
@@ -219,15 +224,18 @@ int main() {
                 detail.add_logs(alog);
                 allaccount.del(allaccount.find(_id));
             } else if (operat == "show") {
+                if(now_user.total<0)error("Invalid");
                 if (!(scanner.hasMoreTokens())) {
-                    allbooks.showall();
+                    Allbooks_.showall();
+                    //allbooks.showall();
                 } else {
                     operat = scanner.nextToken();
                     if (operat == "finance") {
+                        if(now_user.get().privilege<7)error("Invalid");
                         if (!scanner.hasMoreTokens()) {
                             record.show(record.total + 1);
                         } else {
-                            int count = 0;
+                            long long count = 0;
                             operat = scanner.nextToken();
                             for (int i = 0; i < operat.size(); i++) {
                                 count = count * 10 + operat[i] - '0';
@@ -239,61 +247,79 @@ int main() {
                         string s;
                         //operat = scanner.nextToken();
                         if (operat[1] == 'I') {
-                            int qua = 0;
+                            //int qua = 0;
                             if (operat.size() <= 6) {
                                 error("Invalid");
                             }
                             for (int i = 6; i < operat.size(); i++) {
                                 s += operat[i];
                             }
+                            if(s.size()>20)error("Invalid");
                             ISBN isb(s);
-                            allbooks.find(isb);
+                            Allbooks_.find(isb);
+                            //allbooks.find(isb);
                         } else if (operat[1] == 'n') {
                             if (operat.size() <= 8)error("invalid");
                             for (int i = 7; i < operat.size() - 1; i++) {
                                 s += operat[i];
                             }
+                            if(s.size()>60)error("Invalid");
                             Name nam(s);
-                            allbooks.show_name(nam);
+                            Allbooks_.show_name(nam);
+                            //allbooks.show_name(nam);
                         } else if (operat[1] == 'a') {
                             if (operat.size() <= 10)error("invalid");
                             for (int i = 9; i < operat.size() - 1; i++) {
                                 s += operat[i];
                             }
+                            if(s.size()>60)error("Invalid");
                             Author auth(s);
-                            allbooks.show_author(auth);
+                            Allbooks_.show_author(auth);
+                            //allbooks.show_author(auth);
                         } else if (operat[1] == 'k') {
                             if (operat.size() <= 11)error("invalid");
                             for (int i = 10; i < operat.size() - 1; i++) {
                                 if (operat[i] == '|')error("invalid");
                                 s += operat[i];
                             }
+                            //cout<<s;
+                            if(s.size()>60)error("Invalid");
                             Keyword key(s);
-                            allbooks.show_keyword(key);
+                            Allbooks_.show_keyword(key);
+                            //allbooks.show_keyword(key);
                         }
                     }
                 }
             } else if (operat == "buy") {
+                if(now_user.total<0)error("Invalid");
                 diary diary_;
                 string is;
-                int qua = 0;
+                long long qua = 0;
                 operat = scanner.nextToken();
                 is = operat;
                 ISBN isb(is);
-                Block tmp = allbooks.getblock(isb);
+                if(!Allbooks_.exist(isb))error("Invalid");
+                block__<ISBN,Book>tmp=Allbooks_.getblock(isb);
+                //Block tmp = allbooks.getblock(isb);
                 operat = scanner.nextToken();
-                if (operat[0] == '-') error("Invalid");
+                if (operat[0] == '-'||operat=="0") error("Invalid");
                 double spend;
+                if(operat.size()>10)error("Invalid");
                 for (int i = 0; i < operat.size(); i++) {
                     qua = qua * 10 + operat[i] - '0';
                 }
                 for (int k = 0; k < tmp.size; k++) {
-                    if (tmp.ele[k].isbn == isb) {
-                        tmp.ele[k].quantity -= qua;
-                        if (tmp.ele[k].quantity < 0)error("Invalid");
-                        spend = qua * tmp.ele[k].price;
+                    if (tmp.ele[k].index == isb) {
+                        tmp.ele[k].valu.quantity -= qua;
+                        if (tmp.ele[k].valu.quantity < 0)error("Invalid");
+                        spend = qua * tmp.ele[k].valu.price;
+                        string ss1= to_string(spend),s1= to_string(int(spend));
+                        for(int g=0;g<s1.size()+3;g++){
+                            cout<<ss1[g];
+                        }
+                        cout<<'\n';
                         diary_.sum = spend;
-                        cout << spend << '\n';
+                        //cout << spend << '\n';
                     }
                 }
                 //diary_.ID = now_user.get().ID;
@@ -304,7 +330,8 @@ int main() {
                 describe = "sell " + operat + " book " + is + " get " + to_string(spend);
                 log alog(describe);
                 detail.add_logs(alog);
-                allbooks.mywrite(tmp.place, tmp);
+                Allbooks_.list.mywrite(tmp.place,tmp);
+                //allbooks.mywrite(tmp.place, tmp);
 
             } else if (operat == "select") {
                 Account present = now_user.get();
@@ -313,10 +340,14 @@ int main() {
                 operat = scanner.nextToken();
                 is = operat;
                 ISBN isb(is);
-                if (!allbooks.exist(isb)) {
+                if (!Allbooks_.exist(isb)) {
                     Book book_;
-                    book_.isbn = isb;
-                    allbooks.insert(book_);
+                    //book_.isbn = isb;
+                    point<ISBN,Book>tm;
+                    tm.index=isb;
+                    tm.valu.isbn=isb;
+                    Allbooks_.insert(tm);
+                    //allbooks.insert(book_);
                 }
                 string describe, the = present.ID.userid;
 //                int j=0;
@@ -328,18 +359,23 @@ int main() {
                 log alog(describe);
                 now_user.select(isb);
             } else if (operat == "modify") {
+                //cout<<operat;
                 bool iflag = 0, nflag = 0, aflag = 0, kflag = 0, pflag = 0;
                 _block mid = now_user.getblock();
+                if(mid.account.privilege<3)error("Invalid");
                 if (!mid.selected || !scanner.hasMoreTokens())error("Invalid");
-                //cout<<mid.isbn;
-                Block tmp = allbooks.getblock(mid.isbn);
+                //cout<<mid.isbn<<' ';
+                block__<ISBN,Book>tmp=Allbooks_.getblock(mid.isbn);
+                //cout<<1;
+                //Block tmp = allbooks.getblock(mid.isbn);
                 //cout<<1;
                 string s, describe, the, oth;
                 Account now = now_user.get();
+                //if(now.privilege<3)error("Invalid");
                 //int pri=0;
                 while (scanner.hasMoreTokens()) {
                     operat = scanner.nextToken();
-                    cout<<operat;
+                    //cout<<operat;
                     if (operat[1] == 'I') {
                         if (operat.size() <= 6 || iflag)error("invalid");
                         iflag = 1;
@@ -347,16 +383,29 @@ int main() {
                             s += operat[i];
                         }
                         ISBN isb(s);
-                        if (isb == mid.isbn)error("invalid");
-                        int j = 0;
+                        if(Allbooks_.exist(isb))error("Invalid");
+                        if (isb == mid.isbn||s.size()>20)error("invalid");
+                        //int j = 0;
                         for (int i = 0; i < tmp.size; i++) {
-                            if (tmp.ele[i].isbn == mid.isbn) {
-                                while (tmp.ele[i].isbn.isbn_[j] != '\0') {
-                                    the[j] = tmp.ele[i].isbn.isbn_[j];
+                            if (tmp.ele[i].index == mid.isbn) {
+                                the=tmp.ele[i].valu.isbn.isbn_;
+                                for(int p=0;p<now_user.total;p++){
+                                    _block un;
+                                    now_user.myread(p,un);
+                                    if(un.isbn==mid.isbn){
+                                        un.isbn=isb;
+                                        now_user.mywrite(p,un);
+                                    }
                                 }
-                                tmp.ele[i].isbn = mid.isbn = isb;
+//                                while (tmp.ele[i].valu.isbn.isbn_[j] != '\0') {
+//                                    the[j] = tmp.ele[i].isbn.isbn_[j];
+//                                }
+                                tmp.ele[i].index=tmp.ele[i].valu.isbn = mid.isbn = isb;
                             }
                         }
+
+                        tmp.mini=tmp.ele[0];
+                        tmp.maxi=tmp.ele[tmp.size-1];
                         describe += the + " is modified to " + s + ' ';
                     } else if (operat[1] == 'n') {
                         if (operat.size() <= 8 || nflag)error("invalid");
@@ -365,20 +414,22 @@ int main() {
                             s += operat[i];
                         }
                         //int j=0;
+                        //cout<<s;
+                        //if(s=="aPerez")cout<<"!!!!!!!!!!!!";
                         Name nam(s);
                         for (int i = 0; i < tmp.size; i++) {
-                            if (tmp.ele[i].isbn == mid.isbn) {
-                                the = tmp.ele[i].isbn.isbn_;
+                            if (tmp.ele[i].index == mid.isbn) {
+                                the = tmp.ele[i].valu.isbn.isbn_;
 //                                while(tmp.ele[i].isbn.isbn_[j]!='\0'){
 //                                    the[j]=tmp.ele[i].isbn.isbn_[j];
 //                                }
                                 //j=0;
                                 //string oth;
-                                oth = tmp.ele[i].name.name_;
+                                oth = tmp.ele[i].valu.name.name_;
 //                                while(tmp.ele[i].name.name_[j]!='\0'){
 //                                    oth[i]=tmp.ele[i].name.name_[j];
 //                                }
-                                tmp.ele[i].name = nam;
+                                tmp.ele[i].valu.name = nam;
                             }
                         }
                         describe += "Name of " + the + " is changed from " + oth + " to " + s + ' ';
@@ -391,17 +442,17 @@ int main() {
                         //int j=0;
                         Author auth(s);
                         for (int i = 0; i < tmp.size; i++) {
-                            if (tmp.ele[i].isbn == mid.isbn) {
-                                the = tmp.ele[i].isbn.isbn_;
-//                                while(tmp.ele[i].isbn.isbn_[j]!='\0'){
+                            if (tmp.ele[i].index == mid.isbn) {
+                                the = tmp.ele[i].valu.isbn.isbn_;
+//                                while(tmp.ele[i].is.bn.isbn_[j]!='\0'){
 //                                    the[j]=tmp.ele[i].isbn.isbn_[j];
 //                                }
 //                                j=0;
-                                oth = tmp.ele[i].author.author_;
+                                oth = tmp.ele[i].valu.author.author_;
 //                                while (tmp.ele[i].author.author_[j] != '\0') {
 //                                    oth[i] = tmp.ele[i].author.author_[j];
 //                                }
-                                tmp.ele[i].author = auth;
+                                tmp.ele[i].valu.author = auth;
                             }
                         }
                         describe += "Author of " + the + " is changed from " + oth + " to " + s + ' ';
@@ -413,6 +464,10 @@ int main() {
                         string word;
                         for (int i = 10; i < operat.size() - 1; i++) {
                             if (operat[i] == '|' || i == operat.size() - 2) {
+                                if(operat[i+1]=='|'||operat[operat.size() - 2]=='|')error("Invalid");
+                                if(i==operat.size()-2){
+                                    word += operat[i];
+                                }
                                 one.insert(word);
                                 word = "";
                             }
@@ -426,38 +481,42 @@ int main() {
                         //int j = 0;
                         Keyword key(s);
                         for (int i = 0; i < tmp.size; i++) {
-                            if (tmp.ele[i].isbn == mid.isbn) {
-                                the=tmp.ele[i].isbn.isbn_;
+                            if (tmp.ele[i].index == mid.isbn) {
+                                the=tmp.ele[i].valu.isbn.isbn_;
 //                                while (tmp.ele[i].isbn.isbn_[j] != '\0') {
 //                                    the[j] = tmp.ele[i].isbn.isbn_[j];
 //                                }
                                 //j = 0;
-                                oth=tmp.ele[i].keyword.keyword_;
+                                oth=tmp.ele[i].valu.keyword.keyword_;
 //                                while (tmp.ele[i].keyword.keyword_[j] != '\0') {
 //                                    oth[i] = tmp.ele[i].keyword.keyword_[j];
 //                                }
-                                tmp.ele[i].keyword = key;
+                                tmp.ele[i].valu.keyword = key;
                             }
                         }
                         describe += "Keyword of " + the + " is changed from " + oth + " to " + s + ' ';
                     } else {
                         if (operat.size() <= 7 || pflag)error("invalid");
+                        //cout<<operat;
                         pflag = 1;
                         for (int i = 7; i < operat.size(); i++) {
                             s += operat[i];
                         }
+                        if(s.size()>13)error("Invalid");
+                        //cout<<s<<' ';
                         stringstream p(s);
                         double pri;
                         p >> pri;
+
                         int j = 0;
                         for (int i = 0; i < tmp.size; i++) {
-                            if (tmp.ele[i].isbn == mid.isbn) {
-                                the=tmp.ele[i].isbn.isbn_;
+                            if (tmp.ele[i].index == mid.isbn) {
+                                the=tmp.ele[i].valu.isbn.isbn_;
 //                                while (tmp.ele[i].isbn.isbn_[j] != '\0') {
 //                                    the[j] = tmp.ele[i].isbn.isbn_[j];
 //                                }
-                                oth = to_string(tmp.ele[i].price);
-                                tmp.ele[i].price = pri;
+                                oth = to_string(tmp.ele[i].valu.price);
+                                tmp.ele[i].valu.price = pri;
                             }
                         }
                         describe += "Price of " + the + " is changed from " + oth + " to " + s + ' ';
@@ -467,40 +526,42 @@ int main() {
                     s = "";
                 }
                 now_user.mywrite(now_user.total, mid);
-                allbooks.mywrite(tmp.place, tmp);
+                Allbooks_.list.mywrite(tmp.place,tmp);
+                //allbooks.mywrite(tmp.place, tmp);
             } else if (operat == "import") {
                 diary diary_;
                 if (now_user.get().privilege < 3)error("Invalid");
                 _block tmp = now_user.getblock();
                 if (!tmp.selected)error("Invalid");
-                int qua = 0;
-                //string ss;
+                long long qua = 0;
                 operat = scanner.nextToken();
-                if (operat[0] == '-') error("Invalid");
+                if (operat[0] == '-'||operat.size()>10) error("Invalid");
                 for (int i = 0; i < operat.size(); i++) {
+                    if(operat[i]>'9'||operat[i]<'0')error("Invalid");
                     qua = qua * 10 + operat[i] - '0';
                 }
                 operat = scanner.nextToken();
-                if (operat[0] == '-') error("Invalid");
+                if (operat[0] == '-'||operat.size()>13) error("Invalid");
 //                for (int i = 0; i < operat.size(); i++) {
-//                    cost = cost * 10 + operat[i] - '0';
+//                    if(operat[i]>'9'||operat[i]<'0'||operat[i]!='.')error("Invalid");
 //                }
                 stringstream p(operat);
                 double cost;
                 p >> cost;
-                Block bok;
+                block__<ISBN,Book> bok=Allbooks_.getblock(tmp.isbn);
                 //int j = 0;
                 string describe, the;
-                bok = allbooks.getblock(tmp.isbn);
+
+                //bok = allbooks.getblock(tmp.isbn);
                 for (int i = 0; i < bok.size; i++) {
-                    if (bok.ele[i].isbn == tmp.isbn) {
-                        the=bok.ele[i].isbn.isbn_;
+                    if (bok.ele[i].index == tmp.isbn) {
+                        the=bok.ele[i].valu.isbn.isbn_;
 //                        while (bok.ele[i].isbn.isbn_[j] != '\0') {
 //                            the[j] = bok.ele[i].isbn.isbn_[j];
 //                        }
-                        bok.ele[i].quantity += qua;
-                        bok.ele[i].total_cost += cost;
-                        bok.ele[i].price = bok.ele[i].quantity / bok.ele[i].total_cost;
+                        bok.ele[i].valu.quantity += qua;
+                        bok.ele[i].valu.total_cost += cost;
+                        //bok.ele[i].valu.price = bok.ele[i].valu.quantity / bok.ele[i].valu.total_cost;
                     }
                 }
                 describe = "spend " + operat + " to get " + to_string(qua) + " book " + the;
@@ -509,7 +570,8 @@ int main() {
                 //diary_.ID = now_user.get().ID;
                 diary_.sum = cost;
                 record.add_log(diary_);
-                allbooks.mywrite(bok.place, bok);
+                Allbooks_.list.mywrite(bok.place,bok);
+                //allbooks.mywrite(bok.place, bok);
             } else if (operat == "log") {
                 if (now_user.get().privilege < 7)error("Invalid");
                 detail.show_logs();
