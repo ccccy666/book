@@ -4,9 +4,6 @@
 
 #include <cctype>
 #include "error.h"
-
-
-//#include <iostream>
 #include <string>
 #include <sstream>
 
@@ -43,14 +40,11 @@ public:
             position++;
         }
         while(line[position]!=' '&&line[position]!='\0'){
-            //cout<<line[position]<<" ";
+            if(line[position]<32||line[position]==127)error("Invalid");
             ss+=line[position];
-            //cout<<s[i]<<' ';
             position++;
             i++;
         }
-        //cout<<s[0];
-        //cout<<6<<s;
         return ss;
     }
 
@@ -63,7 +57,5 @@ public:
         return true;
     }
 };
-
-
 
 #endif //CODE_TOKENSCANNER_HPP
