@@ -286,7 +286,7 @@ int main() {
                                 s += operat[i];
                             }
                             for(int t=0;t<s.size();t++){
-                                if(s[t]=='"'){
+                                if(s[t]=='\"'){
                                     error("Invalid");
                                 }
                             }
@@ -299,7 +299,7 @@ int main() {
                                 s += operat[i];
                             }
                             for(int t=0;t<s.size();t++){
-                                if(s[t]=='"'){
+                                if(s[t]=='\"'){
                                     error("Invalid");
                                 }
                             }
@@ -313,7 +313,7 @@ int main() {
                                 s += operat[i];
                             }
                             for(int t=0;t<s.size();t++){
-                                if(s[t]=='"'){
+                                if(s[t]=='\"'){
                                     error("Invalid");
                                 }
                             }
@@ -428,7 +428,7 @@ int main() {
                             s += operat[i];
                         }
                         for(int t=0;t<s.size();t++){
-                            if(s[t]=='"'){
+                            if(s[t]=='\"'){
                                 error("Invalid");
                             }
                         }
@@ -448,7 +448,7 @@ int main() {
                             s += operat[i];
                         }
                         for(int t=0;t<s.size();t++){
-                            if(s[t]=='"'){
+                            if(s[t]=='\"'){
                                 error("Invalid");
                             }
                         }
@@ -484,7 +484,7 @@ int main() {
                         }
                         if (one.size() != two.size())error("Invalid");
                         for(int t=0;t<s.size();t++){
-                            if(s[t]=='"'){
+                            if(s[t]=='\"'){
                                 error("Invalid");
                             }
                         }
